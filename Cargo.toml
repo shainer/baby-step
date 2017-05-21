@@ -1,0 +1,6 @@
+[package]
+name = "baby_step"
+version = "0.1.0"
+authors = ["shainer <syn.shainer@gmail.com>"]
+
+[dependencies]
