@@ -61,7 +61,7 @@ fn baby_step_giant_step(n : u32, alpha : u32, beta : u32) -> Result<u32, &'stati
     let mut precomp = HashMap::new();
 
     for j in 0..m {
-        precomp.insert((alpha.pow(j) as u32), j);
+        precomp.insert(modular_exponentiation(alpha, j, n), j);
     }
 
     let invgenerator = modular_inverse(modular_exponentiation(alpha, m, n), n);
