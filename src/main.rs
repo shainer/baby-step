@@ -11,7 +11,7 @@ fn print_help() {
 
 // Efficient computation of the modular exponentiation by chaining.
 //
-// Instead of computing (base ^ exp) mod n, we compute 
+// Instead of computing (base ^ exp) mod n, we compute
 //   ((base ^ 2 mod n) ^ 2 mod n) ...
 // until the product of all exponents is equal to the original exponent.
 // When the exponent is not a power of 2, we multiply by the base as many
@@ -19,7 +19,7 @@ fn print_help() {
 //
 // For instance
 //   base ^ 25 mod n = (base * base^24) mod n = (base * base^8 * base^16) mod n.
-fn modular_exponentiation(base : u32, exp : u32, n : u32) -> u32 {
+fn modular_exponentiation(base: u32, exp: u32, n: u32) -> u32 {
     if base == 0 {
         return 0;
     }
@@ -52,11 +52,11 @@ fn modular_exponentiation(base : u32, exp : u32, n : u32) -> u32 {
 //
 // So we reuse the modular exponentiation algorithm. There are more
 // efficient methods too.
-fn modular_inverse(base : u32, n : u32) -> u32 {
-    return modular_exponentiation(base, n-2, n);
+fn modular_inverse(base: u32, n: u32) -> u32 {
+    return modular_exponentiation(base, n - 2, n);
 }
 
-fn baby_step_giant_step(n : u32, alpha : u32, beta : u32) -> Result<u32, &'static str> {
+fn baby_step_giant_step(n: u32, alpha: u32, beta: u32) -> Result<u32, &'static str> {
     let m = (n as f64).sqrt().ceil() as u32;
     let mut precomp = HashMap::new();
 
@@ -65,15 +65,15 @@ fn baby_step_giant_step(n : u32, alpha : u32, beta : u32) -> Result<u32, &'stati
     }
 
     let invgenerator = modular_inverse(modular_exponentiation(alpha, m, n), n);
-    let mut y : u32 = beta;
+    let mut y: u32 = beta;
     let mut found = false;
-    let mut res : u32 = 0;
+    let mut res: u32 = 0;
 
     for i in 0..m {
         if precomp.contains_key(&y) {
             match precomp.get(&y) {
                 Some(value) => res = (i * m) + value,
-                None => return Err("internal error")
+                None => return Err("internal error"),
             }
 
             found = true;
@@ -84,7 +84,7 @@ fn baby_step_giant_step(n : u32, alpha : u32, beta : u32) -> Result<u32, &'stati
     }
 
     if !found {
-        return Err("not found")
+        return Err("not found");
     }
 
     Ok(res)
@@ -103,15 +103,15 @@ fn main() {
         panic!("Wrong number of command line arguments");
     }
 
-    let n : u32 = args[1].parse::<u32>().unwrap();
-    let alpha : u32 = args[2].parse::<u32>().unwrap();
-    let beta : u32 = args[3].parse::<u32>().unwrap();
+    let n: u32 = args[1].parse::<u32>().unwrap();
+    let alpha: u32 = args[2].parse::<u32>().unwrap();
+    let beta: u32 = args[3].parse::<u32>().unwrap();
 
     println!("Discrete logarithm through baby-step giant-step algorithm.\n");
     println!("Computing x such that {}^x mod {} = {}", alpha, n, beta);
 
     match baby_step_giant_step(n, alpha, beta) {
         Result::Ok(value) => println!("Discrete logarithm is {}", value),
-        Result::Err(_) => println!("Could not find discrete logarithm.")
+        Result::Err(_) => println!("Could not find discrete logarithm."),
     }
 }
